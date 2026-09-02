@@ -55,7 +55,7 @@ export default function AdminPage() {
     const { data } = await supabase
       .from("verifications")
       .select(
-        "id, company_name, city, screenshot_path, status, created_at, profiles(full_name, email)"
+        "id, company_name, city, screenshot_path, status, created_at, profiles!verifications_user_id_fkey(full_name, email)"
       )
       .eq("status", "pending")
       .order("created_at", { ascending: true });
