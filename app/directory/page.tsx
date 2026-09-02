@@ -41,7 +41,7 @@ export default function DirectoryPage() {
 
       const { data } = await supabase
         .from("verifications")
-        .select("user_id, company_name, city, profiles(full_name, branch, batch_year, bio)")
+        .select("user_id, company_name, city, profiles!verifications_user_id_fkey(full_name, branch, batch_year, bio)")
         .eq("status", "approved");
 
       setResults(
