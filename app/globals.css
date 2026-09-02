@@ -1,0 +1,131 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700;800&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------- Dark theme (default) ---------- */
+:root,
+[data-theme="dark"] {
+  --color-ink: 18 21 28;        /* background */
+  --color-inkline: 29 34 48;    /* surface / borders */
+  --color-paper: 245 242 234;   /* primary text */
+  --color-amber: 232 163 61;    /* accent */
+  --color-amberdim: 138 106 46;
+  --color-signal: 76 175 109;   /* success */
+  --color-rust: 192 83 62;      /* danger */
+  --color-slate: 148 156 176;   /* muted text */
+  --glow-1: 232 163 61;
+  --glow-2: 76 175 109;
+}
+
+/* ---------- Light theme ---------- */
+[data-theme="light"] {
+  --color-ink: 250 249 246;
+  --color-inkline: 224 220 210;
+  --color-paper: 26 26 24;
+  --color-amber: 196 122 20;
+  --color-amberdim: 214 170 110;
+  --color-signal: 41 138 84;
+  --color-rust: 176 62 44;
+  --color-slate: 96 100 112;
+  --glow-1: 196 122 20;
+  --glow-2: 41 138 84;
+}
+
+:root {
+  --font-mono: "Space Mono", ui-monospace, monospace;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+* {
+  border-color: rgb(var(--color-inkline));
+}
+
+html {
+  color-scheme: dark;
+}
+[data-theme="light"] {
+  color-scheme: light;
+}
+
+body {
+  background-color: rgb(var(--color-ink));
+  color: rgb(var(--color-paper));
+  font-family: var(--font-sans);
+  transition: background-color 0.35s ease, color 0.35s ease;
+  position: relative;
+  min-height: 100vh;
+}
+
+/* soft ambient glow behind everything — gentle, not loud */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(600px circle at 10% -5%, rgb(var(--glow-1) / 0.12), transparent 60%),
+    radial-gradient(500px circle at 100% 20%, rgb(var(--glow-2) / 0.08), transparent 60%);
+  transition: opacity 0.35s ease;
+}
+
+/* ---------- Glassmorphism ---------- */
+.glass {
+  background: rgb(var(--color-inkline) / 0.35);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgb(var(--color-inkline) / 0.7);
+}
+
+.glass-card {
+  background: rgb(var(--color-inkline) / 0.28);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgb(var(--color-inkline) / 0.8);
+  border-radius: 0.75rem;
+  box-shadow: 0 8px 30px rgb(0 0 0 / 0.12);
+  transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+.glass-card:hover {
+  border-color: rgb(var(--color-amber) / 0.45);
+  box-shadow: 0 12px 40px rgb(0 0 0 / 0.16);
+}
+
+.glass-input {
+  background: rgb(var(--color-inkline) / 0.25);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgb(var(--color-inkline) / 0.9);
+}
+.glass-input:focus {
+  border-color: rgb(var(--color-amber));
+  outline: none;
+}
+
+/* split-flap board digit flicker on load */
+@keyframes flap {
+  0% { opacity: 0; transform: translateY(-6px); }
+  60% { opacity: 1; }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.flap-in {
+  animation: flap 0.5s ease-out both;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+.float-gentle {
+  animation: float 4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flap-in, .float-gentle {
+    animation: none;
+  }
+  body::before {
+    display: none;
+  }
+}
