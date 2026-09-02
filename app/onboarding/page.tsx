@@ -47,7 +47,7 @@ export default function OnboardingPage() {
     setError("");
 
     if (!file) {
-      setError("Attach a screenshot of your accepted offer — this part is required so we can confirm you're placed, but only your admin ever sees it.");
+      setError("Attach a screenshot of your accepted offer. It can be email or profile page of Recruit Sage — this part is required so we can confirm you're placed, but only your admin ever sees it. You caan Hide your CTC/Stipend if you want.");
       return;
     }
     if (bioWords > BIO_MAX_WORDS) {
