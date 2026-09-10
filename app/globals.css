@@ -1,0 +1,173 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------- Light theme (default) — clean, professional ---------- */
+:root,
+[data-theme="light"] {
+  --color-ink: 250 249 247;
+  --color-inkline: 226 222 214;
+  --color-paper: 24 24 22;
+  --color-amber: 196 122 20;
+  --color-amberdim: 214 170 110;
+  --color-signal: 41 138 84;
+  --color-rust: 176 62 44;
+  --color-slate: 100 104 118;
+  --glow-1: 196 122 20;
+  --glow-2: 41 138 84;
+}
+
+/* ---------- Dark theme ---------- */
+[data-theme="dark"] {
+  --color-ink: 18 21 28;
+  --color-inkline: 29 34 48;
+  --color-paper: 245 242 234;
+  --color-amber: 232 163 61;
+  --color-amberdim: 138 106 46;
+  --color-signal: 76 175 109;
+  --color-rust: 192 83 62;
+  --color-slate: 148 156 176;
+  --glow-1: 232 163 61;
+  --glow-2: 76 175 109;
+}
+
+:root {
+  --font-mono: "Space Mono", ui-monospace, monospace;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Plus Jakarta Sans", "Inter", ui-sans-serif, sans-serif;
+}
+
+* {
+  border-color: rgb(var(--color-inkline));
+}
+
+html {
+  color-scheme: dark;
+  overflow-x: hidden;
+}
+[data-theme="light"] {
+  color-scheme: light;
+}
+
+body {
+  background-color: rgb(var(--color-ink));
+  color: rgb(var(--color-paper));
+  font-family: var(--font-sans);
+  transition: background-color 0.35s ease, color 0.35s ease;
+  position: relative;
+  min-height: 100vh;
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+/* room for the fixed mobile bottom tab bar so it never covers the last
+   bit of content on any page (this is what made the reply/message
+   buttons look like they'd "disappeared" on phones) */
+@media (max-width: 639px) {
+  body {
+    padding-bottom: calc(4.75rem + env(safe-area-inset-bottom));
+  }
+}
+
+/* soft ambient glow behind everything — gentle, not loud */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(600px circle at 10% -5%, rgb(var(--glow-1) / 0.12), transparent 60%),
+    radial-gradient(500px circle at 100% 20%, rgb(var(--glow-2) / 0.08), transparent 60%);
+  transition: opacity 0.35s ease;
+  animation: drift 18s ease-in-out infinite alternate;
+}
+
+@keyframes drift {
+  0% { background-position: 0% 0%, 100% 0%; }
+  100% { background-position: 8% 6%, 92% 12%; }
+}
+
+/* ---------- Glassmorphism ---------- */
+.glass {
+  background: rgb(var(--color-inkline) / 0.35);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgb(var(--color-inkline) / 0.7);
+}
+
+.glass-card {
+  background: linear-gradient(
+    165deg,
+    rgb(var(--color-inkline) / 0.34),
+    rgb(var(--color-inkline) / 0.2)
+  );
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgb(var(--color-inkline) / 0.85);
+  border-radius: 1.1rem;
+  box-shadow:
+    0 1px 0 0 rgb(255 255 255 / 0.04) inset,
+    0 20px 40px -20px rgb(0 0 0 / 0.35);
+  transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+.glass-card:hover {
+  border-color: rgb(var(--color-amber) / 0.5);
+  transform: translateY(-2px);
+  box-shadow:
+    0 1px 0 0 rgb(255 255 255 / 0.06) inset,
+    0 24px 48px -18px rgb(0 0 0 / 0.4);
+}
+
+.glass-input {
+  background: rgb(var(--color-inkline) / 0.25);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgb(var(--color-inkline) / 0.9);
+  border-radius: 0.75rem;
+}
+.glass-input:focus {
+  border-color: rgb(var(--color-amber));
+  outline: none;
+  box-shadow: 0 0 0 3px rgb(var(--color-amber) / 0.15);
+}
+
+.gradient-text {
+  background: linear-gradient(
+    100deg,
+    rgb(var(--color-amber)),
+    rgb(var(--color-rust)) 50%,
+    rgb(var(--color-amber))
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* split-flap board digit flicker on load */
+@keyframes flap {
+  0% { opacity: 0; transform: translateY(-6px); }
+  60% { opacity: 1; }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.flap-in {
+  animation: flap 0.5s ease-out both;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+.float-gentle {
+  animation: float 4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flap-in, .float-gentle {
+    animation: none;
+  }
+  body::before {
+    display: none;
+  }
+}
